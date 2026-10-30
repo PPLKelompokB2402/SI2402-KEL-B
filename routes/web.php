@@ -30,6 +30,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:web'
 */
 Route::prefix('vendor')->name('vendor.')->middleware(['auth:web', 'role:vendor'])->group(function () {
     Route::get('/dashboard', [VendorPortalController::class, 'dashboard'])->name('dashboard');
+    Route::get('/usaha', [VendorPortalController::class, 'usaha'])->name('usaha');
+    Route::post('/usaha', [VendorPortalController::class, 'simpanUsaha'])->name('usaha.simpan');
+    Route::put('/usaha/{vendor}', [VendorPortalController::class, 'updateUsaha'])->name('usaha.update');
+    Route::get('/profil', [VendorPortalController::class, 'profil'])->name('profil');
 });
 
 /*

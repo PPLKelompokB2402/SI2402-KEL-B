@@ -1,15 +1,34 @@
-# KolaboraEO — Tahap 00: Login & register dengan session
+# KolaboraEO — Tahap 01: PBI-01 Profil usaha vendor
 
-Fondasi autentikasi sebelum user story dimulai.
+Vendor membuat dan mengelola profil usaha; satu akun bisa memiliki beberapa usaha.
 
 ## Yang ditambahkan pada tahap ini
 
-- Registrasi akun pelanggan dan vendor (`/register`), password di-hash ke kolom `password_hash`.
-- Login & logout (`/login`, `/logout`); sesi disimpan di tabel `sessions` (`SESSION_DRIVER=database`) dan di-regenerate saat login.
-- Middleware `role:` membatasi halaman per peran; akun nonaktif tidak bisa masuk.
-- Pada tahap ini admin & super admin masih masuk lewat `/login` yang sama (dipisah di US-10).
-- Akun Super Admin pertama dibuat dari seeder (`SUPER_ADMIN_*` di `.env`) atau `php artisan admin:create-super-admin`. Akun admin sementara dibuat dengan `php artisan admin:create-admin` (digantikan portal super admin di US-12).
-- Tabel: `users`, `pelanggan`, `administrator`, `super_admin`, `sessions` (+ `cache`, `jobs` bawaan Laravel).
+- Halaman "Usaha saya" (`/vendor/usaha`) untuk menambah usaha, dan halaman profil (`/vendor/profil?vendor=`) untuk mengubahnya.
+- Profil baru/diubah berstatus *menunggu verifikasi*. Hanya pemilik yang dapat mengubah usahanya.
+- Dashboard vendor menampilkan kelengkapan profil.
+- Tabel baru: `kategori_layanan` (seeder mengisi 6 kategori), `vendor`.
+
+## File yang berubah dari tahap 00
+
+- **baru** `app/Models/KategoriLayanan.php`
+- **baru** `app/Models/Vendor.php`
+- **baru** `database/migrations/2026_10_23_000004_create_kategori_layanan_table.php`
+- **baru** `database/migrations/2026_10_23_000005_create_vendor_table.php`
+- **baru** `resources/views/vendor/partials/form-profil.blade.php`
+- **baru** `resources/views/vendor/profil.blade.php`
+- **baru** `resources/views/vendor/usaha.blade.php`
+- **baru** `tests/Feature/Us01ProfilUsahaTest.php`
+- diubah `app/Http/Controllers/AuthController.php`
+- diubah `app/Http/Controllers/VendorPortalController.php`
+- diubah `app/Models/User.php`
+- diubah `database/seeders/DatabaseSeeder.php`
+- diubah `resources/views/layouts/portal.blade.php`
+- diubah `resources/views/vendor/dashboard.blade.php`
+- diubah `routes/web.php`
+- diubah `tests/Feature/HalamanDapatDirenderTest.php`
+- diubah `tests/Feature/KolaboraTestCase.php`
+- diubah `tests/Feature/Us00AutentikasiTest.php`
 
 ## Menjalankan
 

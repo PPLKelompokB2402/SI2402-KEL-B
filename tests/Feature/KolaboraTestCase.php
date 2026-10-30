@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\KategoriLayanan;
 use App\Models\User;
+use App\Models\Vendor;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -33,6 +35,21 @@ abstract class KolaboraTestCase extends TestCase
     protected function sebagaiSuperAdmin(User $superAdmin): static
     {
         return $this->actingAs($superAdmin, 'web');
+    }
+
+    protected function buatVendor(array $attributes = []): Vendor
+    {
+        $user = User::factory()->role('vendor')->create();
+
+        return Vendor::create(array_merge([
+            'id_user' => $user->id_user,
+            'id_kategori' => KategoriLayanan::first()->id_kategori,
+            'nama_usaha' => 'Vendor '.$user->id_user,
+            'deskripsi_usaha' => 'Deskripsi layanan vendor.',
+            'lokasi_layanan' => 'Jakarta',
+            'kisaran_harga' => 5000000,
+            'status_verifikasi' => Vendor::TERVERIFIKASI,
+        ], $attributes))->load('user');
     }
 
     protected function buatPelanggan(): User

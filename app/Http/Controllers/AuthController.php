@@ -88,7 +88,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return $user->role === User::ROLE_VENDOR
-            ? redirect()->route('vendor.dashboard')->with('status', 'Akun vendor berhasil dibuat.')
+            ? redirect()->route('vendor.profil')->with('status', 'Akun vendor dibuat. Lengkapi profil usaha agar dapat diverifikasi.')
             : redirect()->route('vendors.index')->with('status', 'Akun pelanggan berhasil dibuat.');
     }
 

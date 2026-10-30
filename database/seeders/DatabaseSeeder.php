@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\KategoriLayanan;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,16 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        foreach ([
+            ['Dekorasi', 'Dekorasi panggung, pelaminan, dan tata ruang acara.'],
+            ['Katering', 'Penyedia makanan dan minuman untuk acara.'],
+            ['Fotografi', 'Dokumentasi foto dan video acara.'],
+            ['Event Organizer', 'Perencana dan pelaksana acara secara menyeluruh.'],
+            ['Musik & Hiburan', 'Band, DJ, MC, dan pengisi acara.'],
+            ['Venue', 'Gedung, ballroom, dan lokasi acara.'],
+        ] as [$nama, $deskripsi]) {
+            KategoriLayanan::firstOrCreate(['nama_kategori' => $nama], ['deskripsi' => $deskripsi]);
+        }
 
         $credentials = config('auth.super_admin');
 

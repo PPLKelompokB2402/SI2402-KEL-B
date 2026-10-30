@@ -51,6 +51,12 @@ class User extends Authenticatable
         return $this->hasOne(Pelanggan::class, 'id_pelanggan', 'id_user');
     }
 
+    /** Profil usaha milik akun vendor (satu akun dapat memiliki beberapa usaha). */
+    public function vendors(): HasMany
+    {
+        return $this->hasMany(Vendor::class, 'id_user', 'id_user');
+    }
+
     public function administrator(): HasOne
     {
         return $this->hasOne(Administrator::class, 'id_admin', 'id_user');

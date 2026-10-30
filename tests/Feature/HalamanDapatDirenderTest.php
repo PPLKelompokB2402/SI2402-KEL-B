@@ -12,7 +12,8 @@ class HalamanDapatDirenderTest extends KolaboraTestCase
 {
     public function test_semua_halaman_tanpa_parameter_dapat_dirender(): void
     {
-        $vendorUser = \App\Models\User::factory()->role('vendor')->create();
+        $vendor = $this->buatVendor();
+        $vendorUser = $vendor->user;
         $pelanggan = $this->buatPelanggan();
         $admin = $this->buatAdmin();
         $super = $this->buatSuperAdmin();
