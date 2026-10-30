@@ -46,7 +46,7 @@ class Us00AutentikasiTest extends KolaboraTestCase
             'role' => 'vendor', 'nama' => 'Budi', 'email' => 'budi@example.test', 'no_hp' => '081234567891',
             'password' => 'rahasia123', 'password_confirmation' => 'rahasia123',
         ]);
-        $response->assertRedirect('/vendor/dashboard');
+        $response->assertRedirect('/vendor/profil');
 
         $this->assertAuthenticatedAs(User::where('email', 'budi@example.test')->firstOrFail(), 'web');
         $this->get('/vendor/dashboard')->assertOk();
