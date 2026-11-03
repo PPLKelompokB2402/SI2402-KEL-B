@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DokumenLegalitas;
 use App\Models\KategoriLayanan;
 use App\Models\Vendor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
@@ -22,6 +25,7 @@ class VendorPortalController extends Controller
         $vendors = $user->vendors()
             ->with([
                 'kategori',
+                'dokumenLegalitas',
             ])
             ->orderBy('id_vendor')
             ->get();
@@ -30,6 +34,8 @@ class VendorPortalController extends Controller
         $checks = collect([
             ['label' => 'Profil usaha', 'complete' => (bool) $vendor],
             ['label' => 'Nomor WhatsApp', 'complete' => filled($user->no_hp)],
+            ['label' => 'Dokumen KTP', 'complete' => (bool) $vendor?->dokumenLegalitas->contains('jenis_dokumen', 'KTP')],
+            ['label' => 'Dokumen NIB / SIUP', 'complete' => (bool) $vendor?->dokumenLegalitas->whereIn('jenis_dokumen', ['NIB', 'SIUP'])->isNotEmpty()],
         ]);
 
         return view('vendor.dashboard', [
@@ -71,7 +77,7 @@ class VendorPortalController extends Controller
         });
 
         return redirect()->route('vendor.profil', ['vendor' => $vendor->id_vendor])
-            ->with('status', 'Profil usaha ditambahkan dan diajukan untuk verifikasi.');
+            ->with('status', 'Profil usaha ditambahkan. Unggah dokumen legalitas agar dapat diverifikasi.');
     }
 
     /** Halaman "Profil & legalitas" untuk satu usaha (dipilih lewat ?vendor=). */
@@ -88,7 +94,7 @@ class VendorPortalController extends Controller
 
         return view('vendor.profil', [
             'vendors' => $vendors,
-            'vendor' => $vendor,
+            'vendor' => $vendor->load('dokumenLegalitas'),
             'kategori' => KategoriLayanan::orderBy('nama_kategori')->get(),
         ]);
     }
@@ -106,6 +112,40 @@ class VendorPortalController extends Controller
         });
 
         return back()->with('status', 'Profil usaha disimpan dan diajukan untuk verifikasi.');
+    }
+
+    public function unggahLegalitas(Request $request, Vendor $vendor): RedirectResponse
+    {
+        $this->authorizeOwner($request, $vendor);
+        $data = $request->validate([
+            'jenis_dokumen' => ['required', Rule::in(DokumenLegalitas::JENIS)],
+            'no_dokumen' => ['required', 'string', 'max:50'],
+            'berkas' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:4096'],
+        ]);
+
+        $lama = $vendor->dokumenLegalitas()->where('jenis_dokumen', $data['jenis_dokumen'])->first();
+        $path = $request->file('berkas')->store("legalitas/{$vendor->id_vendor}", 'local');
+
+        DB::transaction(function () use ($vendor, $data, $path): void {
+            $vendor->dokumenLegalitas()->updateOrCreate(
+                ['jenis_dokumen' => $data['jenis_dokumen']],
+                [
+                    'no_dokumen' => $data['no_dokumen'],
+                    'media_url' => $path,
+                    'status_verifikasi' => DokumenLegalitas::MENUNGGU,
+                    'catatan_admin' => null,
+                    'id_admin' => null,
+                ],
+            );
+            $vendor->update(['status_verifikasi' => Vendor::MENUNGGU]);
+        });
+
+        if ($lama) {
+            Storage::disk('local')->delete($lama->media_url);
+        }
+
+        return redirect()->route('vendor.profil', ['vendor' => $vendor->id_vendor])
+            ->with('status', 'Dokumen '.$data['jenis_dokumen'].' berhasil diunggah dan menunggu pemeriksaan admin.');
     }
 
     private function validatedProfil(Request $request): array

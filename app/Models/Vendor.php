@@ -51,6 +51,11 @@ class Vendor extends Model
         return $this->belongsTo(KategoriLayanan::class, 'id_kategori', 'id_kategori');
     }
 
+    public function dokumenLegalitas(): HasMany
+    {
+        return $this->hasMany(DokumenLegalitas::class, 'id_vendor', 'id_vendor');
+    }
+
     public function scopeTerverifikasi(Builder $query): Builder
     {
         return $query->where('status_verifikasi', self::TERVERIFIKASI);

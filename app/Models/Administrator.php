@@ -28,4 +28,8 @@ class Administrator extends Model
         return $this->belongsTo(SuperAdmin::class, 'id_super_admin', 'id_super_admin');
     }
 
+    public function dokumenDiverifikasi(): HasMany
+    {
+        return $this->hasMany(DokumenLegalitas::class, 'id_admin', 'id_admin');
+    }
 }

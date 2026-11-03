@@ -1,34 +1,24 @@
-# KolaboraEO — Tahap 01: PBI-01 Profil usaha vendor
+# KolaboraEO — Tahap 02: PBI-02 Unggah dokumen legalitas
 
-Vendor membuat dan mengelola profil usaha; satu akun bisa memiliki beberapa usaha.
+Vendor mengunggah KTP dan NIB/SIUP untuk verifikasi.
 
 ## Yang ditambahkan pada tahap ini
 
-- Halaman "Usaha saya" (`/vendor/usaha`) untuk menambah usaha, dan halaman profil (`/vendor/profil?vendor=`) untuk mengubahnya.
-- Profil baru/diubah berstatus *menunggu verifikasi*. Hanya pemilik yang dapat mengubah usahanya.
-- Dashboard vendor menampilkan kelengkapan profil.
-- Tabel baru: `kategori_layanan` (seeder mengisi 6 kategori), `vendor`.
+- Form unggah di halaman "Profil & legalitas"; PDF/JPG/PNG maks. 4 MB, unggah ulang mengganti berkas lama.
+- Berkas disimpan privat (`storage/app/private`) dan hanya bisa dibuka pemilik/petugas lewat `/media/dokumen/{id}`.
+- Tabel baru: `dokumen_legalitas`.
 
-## File yang berubah dari tahap 00
+## File yang berubah dari tahap 01
 
-- **baru** `app/Models/KategoriLayanan.php`
-- **baru** `app/Models/Vendor.php`
-- **baru** `database/migrations/2026_10_23_000004_create_kategori_layanan_table.php`
-- **baru** `database/migrations/2026_10_23_000005_create_vendor_table.php`
-- **baru** `resources/views/vendor/partials/form-profil.blade.php`
-- **baru** `resources/views/vendor/profil.blade.php`
-- **baru** `resources/views/vendor/usaha.blade.php`
-- **baru** `tests/Feature/Us01ProfilUsahaTest.php`
-- diubah `app/Http/Controllers/AuthController.php`
+- **baru** `app/Http/Controllers/MediaController.php`
+- **baru** `app/Models/DokumenLegalitas.php`
+- **baru** `database/migrations/2026_10_23_000006_create_dokumen_legalitas_table.php`
+- **baru** `tests/Feature/Us02LegalitasTest.php`
 - diubah `app/Http/Controllers/VendorPortalController.php`
-- diubah `app/Models/User.php`
-- diubah `database/seeders/DatabaseSeeder.php`
-- diubah `resources/views/layouts/portal.blade.php`
-- diubah `resources/views/vendor/dashboard.blade.php`
+- diubah `app/Models/Administrator.php`
+- diubah `app/Models/Vendor.php`
+- diubah `resources/views/vendor/profil.blade.php`
 - diubah `routes/web.php`
-- diubah `tests/Feature/HalamanDapatDirenderTest.php`
-- diubah `tests/Feature/KolaboraTestCase.php`
-- diubah `tests/Feature/Us00AutentikasiTest.php`
 
 ## Menjalankan
 
