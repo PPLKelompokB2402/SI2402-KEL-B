@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\VendorPortalController;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::view('/', 'home')->name('vendors.index');
 
+Route::get('/media/dokumen/{dokumen}', [MediaController::class, 'dokumen'])->name('media.dokumen');
 
 /*
 | Autentikasi — login & register dengan session (satu halaman login untuk semua peran)
@@ -34,6 +36,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth:web', 'role:vendor']
     Route::post('/usaha', [VendorPortalController::class, 'simpanUsaha'])->name('usaha.simpan');
     Route::put('/usaha/{vendor}', [VendorPortalController::class, 'updateUsaha'])->name('usaha.update');
     Route::get('/profil', [VendorPortalController::class, 'profil'])->name('profil');
+    Route::post('/usaha/{vendor}/legalitas', [VendorPortalController::class, 'unggahLegalitas'])->name('legalitas.unggah');
 });
 
 /*
