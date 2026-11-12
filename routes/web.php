@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::view('/', 'home')->name('vendors.index');
 
+Route::get('/media/portofolio/{portofolio}', [MediaController::class, 'portofolio'])->name('media.portofolio');
 Route::get('/media/dokumen/{dokumen}', [MediaController::class, 'dokumen'])->name('media.dokumen');
 
 /*
@@ -37,6 +38,9 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth:web', 'role:vendor']
     Route::put('/usaha/{vendor}', [VendorPortalController::class, 'updateUsaha'])->name('usaha.update');
     Route::get('/profil', [VendorPortalController::class, 'profil'])->name('profil');
     Route::post('/usaha/{vendor}/legalitas', [VendorPortalController::class, 'unggahLegalitas'])->name('legalitas.unggah');
+    Route::get('/portofolio', [VendorPortalController::class, 'portofolio'])->name('portofolio');
+    Route::post('/usaha/{vendor}/portofolio', [VendorPortalController::class, 'simpanPortofolio'])->name('portofolio.simpan');
+    Route::delete('/portofolio/{portofolio}', [VendorPortalController::class, 'hapusPortofolio'])->name('portofolio.hapus');
 });
 
 /*

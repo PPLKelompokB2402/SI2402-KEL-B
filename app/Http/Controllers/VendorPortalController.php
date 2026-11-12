@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\DokumenLegalitas;
 use App\Models\KategoriLayanan;
+use App\Models\Portofolio;
 use App\Models\Vendor;
+use App\Services\WatermarkService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +28,7 @@ class VendorPortalController extends Controller
             ->with([
                 'kategori',
                 'dokumenLegalitas',
+                'portofolio',
             ])
             ->orderBy('id_vendor')
             ->get();
@@ -36,6 +39,7 @@ class VendorPortalController extends Controller
             ['label' => 'Nomor WhatsApp', 'complete' => filled($user->no_hp)],
             ['label' => 'Dokumen KTP', 'complete' => (bool) $vendor?->dokumenLegalitas->contains('jenis_dokumen', 'KTP')],
             ['label' => 'Dokumen NIB / SIUP', 'complete' => (bool) $vendor?->dokumenLegalitas->whereIn('jenis_dokumen', ['NIB', 'SIUP'])->isNotEmpty()],
+            ['label' => 'Minimal satu portofolio', 'complete' => (bool) $vendor?->portofolio->isNotEmpty()],
         ]);
 
         return view('vendor.dashboard', [
@@ -46,6 +50,7 @@ class VendorPortalController extends Controller
             'stats' => [
                 'usaha' => $vendors->count(),
                 'menunggu' => $vendors->where('status_verifikasi', Vendor::MENUNGGU)->count(),
+                'portofolio' => $vendors->sum(fn ($item) => $item->portofolio->count()),
             ],
         ]);
     }
@@ -56,6 +61,7 @@ class VendorPortalController extends Controller
         return view('vendor.usaha', [
             'vendors' => $request->user()->vendors()->with([
                 'kategori',
+                'portofolio',
             ])->orderBy('id_vendor')->get(),
             'kategori' => KategoriLayanan::orderBy('nama_kategori')->get(),
         ]);
@@ -146,6 +152,41 @@ class VendorPortalController extends Controller
 
         return redirect()->route('vendor.profil', ['vendor' => $vendor->id_vendor])
             ->with('status', 'Dokumen '.$data['jenis_dokumen'].' berhasil diunggah dan menunggu pemeriksaan admin.');
+    }
+
+    public function portofolio(Request $request): View
+    {
+        return view('vendor.portofolio', [
+            'vendors' => $request->user()->vendors()->with('portofolio')->orderBy('id_vendor')->get(),
+        ]);
+    }
+
+    public function simpanPortofolio(Request $request, Vendor $vendor, WatermarkService $watermark): RedirectResponse
+    {
+        $this->authorizeOwner($request, $vendor);
+        $data = $request->validate([
+            'judul_proyek' => ['required', 'string', 'max:120'],
+            'deskripsi_proyek' => ['nullable', 'string', 'max:500'],
+            'media' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
+
+        $media = $watermark->simpanPortofolio($request->file('media'), $vendor->id_vendor, $vendor->nama_usaha);
+        $portofolio = $vendor->portofolio()->create([
+            'judul_proyek' => $data['judul_proyek'],
+            'deskripsi_proyek' => $data['deskripsi_proyek'] ?? null,
+            ...$media,
+        ]);
+
+        return back()->with('status', 'Portofolio ditambahkan dan watermark diterapkan otomatis.');
+    }
+
+    public function hapusPortofolio(Request $request, Portofolio $portofolio): RedirectResponse
+    {
+        $this->authorizeOwner($request, $portofolio->vendor);
+        Storage::disk('local')->delete([$portofolio->media_url, $portofolio->media_watermark_url]);
+        $portofolio->delete();
+
+        return back()->with('status', 'Portofolio dihapus.');
     }
 
     private function validatedProfil(Request $request): array

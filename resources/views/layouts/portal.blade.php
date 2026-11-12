@@ -20,6 +20,7 @@
             ['name' => 'vendor.dashboard', 'label' => 'Ringkasan', 'icon' => 'grid'],
             ['name' => 'vendor.usaha', 'label' => 'Usaha saya', 'icon' => 'store'],
             ['name' => 'vendor.profil', 'label' => 'Profil & legalitas', 'icon' => 'briefcase'],
+            ['name' => 'vendor.portofolio', 'label' => 'Portofolio', 'icon' => 'image'],
         ],
     ])
 </body>

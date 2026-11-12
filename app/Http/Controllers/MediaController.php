@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DokumenLegalitas;
+use App\Models\Portofolio;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,6 +15,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class MediaController extends Controller
 {
+    public function portofolio(Portofolio $portofolio): StreamedResponse
+    {
+        return $this->stream($portofolio->media_watermark_url, true);
+    }
+
     public function dokumen(DokumenLegalitas $dokumen): StreamedResponse
     {
         abort_unless($this->isPetugas() || Auth::guard('web')->id() === $dokumen->vendor->id_user, 403);
