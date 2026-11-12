@@ -10,6 +10,7 @@
         <div class="portal-stats vendor-overview-stats">
             <article><span class="metric-icon"><x-icon name="store" /></span><strong>{{ $stats['usaha'] }}</strong><span>Profil usaha</span></article>
             <article><span class="metric-icon"><x-icon name="clock" /></span><strong>{{ $stats['menunggu'] }}</strong><span>Menunggu verifikasi</span></article>
+            <article><span class="metric-icon"><x-icon name="image" /></span><strong>{{ $stats['portofolio'] }}</strong><span>Item portofolio</span></article>
         </div>
         <div class="vendor-dashboard-grid">
             <section class="portal-panel completion-panel">

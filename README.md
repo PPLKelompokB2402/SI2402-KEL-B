@@ -1,23 +1,25 @@
-# KolaboraEO — Tahap 02: PBI-02 Unggah dokumen legalitas
+# KolaboraEO — Tahap 03: PBI-03 Portofolio dengan watermark
 
-Vendor mengunggah KTP dan NIB/SIUP untuk verifikasi.
+Vendor menambah/menghapus portofolio; watermark dibuat otomatis.
 
 ## Yang ditambahkan pada tahap ini
 
-- Form unggah di halaman "Profil & legalitas"; PDF/JPG/PNG maks. 4 MB, unggah ulang mengganti berkas lama.
-- Berkas disimpan privat (`storage/app/private`) dan hanya bisa dibuka pemilik/petugas lewat `/media/dokumen/{id}`.
-- Tabel baru: `dokumen_legalitas`.
+- Halaman `/vendor/portofolio` per usaha; gambar JPG/PNG/WEBP maks. 5 MB.
+- File asli disimpan privat, versi ber-watermark (ekstensi GD) disajikan publik lewat `/media/portofolio/{id}`.
+- Tabel baru: `portofolio`.
 
-## File yang berubah dari tahap 01
+## File yang berubah dari tahap 02
 
-- **baru** `app/Http/Controllers/MediaController.php`
-- **baru** `app/Models/DokumenLegalitas.php`
-- **baru** `database/migrations/2026_10_23_000006_create_dokumen_legalitas_table.php`
-- **baru** `tests/Feature/Us02LegalitasTest.php`
+- **baru** `app/Models/Portofolio.php`
+- **baru** `app/Services/WatermarkService.php`
+- **baru** `database/migrations/2026_10_23_000007_create_portofolio_table.php`
+- **baru** `resources/views/vendor/portofolio.blade.php`
+- **baru** `tests/Feature/Us03PortofolioTest.php`
+- diubah `app/Http/Controllers/MediaController.php`
 - diubah `app/Http/Controllers/VendorPortalController.php`
-- diubah `app/Models/Administrator.php`
 - diubah `app/Models/Vendor.php`
-- diubah `resources/views/vendor/profil.blade.php`
+- diubah `resources/views/layouts/portal.blade.php`
+- diubah `resources/views/vendor/dashboard.blade.php`
 - diubah `routes/web.php`
 
 ## Menjalankan
