@@ -1,26 +1,19 @@
-# KolaboraEO — Tahap 03: PBI-03 Portofolio dengan watermark
+# KolaboraEO — Tahap 04: PBI-04 Katalog vendor terverifikasi
 
-Vendor menambah/menghapus portofolio; watermark dibuat otomatis.
+Beranda menjadi katalog yang hanya menampilkan vendor terverifikasi.
 
 ## Yang ditambahkan pada tahap ini
 
-- Halaman `/vendor/portofolio` per usaha; gambar JPG/PNG/WEBP maks. 5 MB.
-- File asli disimpan privat, versi ber-watermark (ekstensi GD) disajikan publik lewat `/media/portofolio/{id}`.
-- Tabel baru: `portofolio`.
+- Halaman `/` menampilkan kartu vendor terverifikasi (6 per halaman).
+- Catatan: tombol verifikasi admin baru ada di US-08. Untuk mencoba katalog di tahap 04–07, ubah status lewat tinker: `php artisan tinker` lalu `App\Models\Vendor::query()->update(['status_verifikasi' => 'terverifikasi'])`.
 
-## File yang berubah dari tahap 02
+## File yang berubah dari tahap 03
 
-- **baru** `app/Models/Portofolio.php`
-- **baru** `app/Services/WatermarkService.php`
-- **baru** `database/migrations/2026_10_23_000007_create_portofolio_table.php`
-- **baru** `resources/views/vendor/portofolio.blade.php`
-- **baru** `tests/Feature/Us03PortofolioTest.php`
-- diubah `app/Http/Controllers/MediaController.php`
-- diubah `app/Http/Controllers/VendorPortalController.php`
-- diubah `app/Models/Vendor.php`
-- diubah `resources/views/layouts/portal.blade.php`
-- diubah `resources/views/vendor/dashboard.blade.php`
+- **baru** `app/Http/Controllers/CatalogController.php`
+- **baru** `resources/views/customer/index.blade.php`
+- **baru** `tests/Feature/Us04KatalogTest.php`
 - diubah `routes/web.php`
+- dihapus `resources/views/home.blade.php`
 
 ## Menjalankan
 
