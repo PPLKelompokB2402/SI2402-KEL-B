@@ -2,15 +2,16 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\VendorPortalController;
 use Illuminate\Support\Facades\Route;
 
 /*
-| Beranda — katalog vendor menyusul di PBI-04
+| Pelanggan (publik) — PBI-04, 05, 06, 14
 */
-Route::view('/', 'home')->name('vendors.index');
+Route::get('/', [CatalogController::class, 'index'])->name('vendors.index');
 
 Route::get('/media/portofolio/{portofolio}', [MediaController::class, 'portofolio'])->name('media.portofolio');
 Route::get('/media/dokumen/{dokumen}', [MediaController::class, 'dokumen'])->name('media.dokumen');
