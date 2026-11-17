@@ -1,16 +1,19 @@
-# KolaboraEO — Tahap 05: PBI-05 Pencarian & filter
+# KolaboraEO — Tahap 04: PBI-04 Katalog vendor terverifikasi
 
-Pelanggan mencari dan menyaring katalog.
+Beranda menjadi katalog yang hanya menampilkan vendor terverifikasi.
 
 ## Yang ditambahkan pada tahap ini
 
-- Kata kunci, kategori, lokasi, kisaran harga minimum–maksimum, urutkan berdasarkan harga.
+- Halaman `/` menampilkan kartu vendor terverifikasi (6 per halaman).
+- Catatan: tombol verifikasi admin baru ada di US-08. Untuk mencoba katalog di tahap 04–07, ubah status lewat tinker: `php artisan tinker` lalu `App\Models\Vendor::query()->update(['status_verifikasi' => 'terverifikasi'])`.
 
-## File yang berubah dari tahap 04
+## File yang berubah dari tahap 03
 
-- **baru** `tests/Feature/Us05PencarianFilterTest.php`
-- diubah `app/Http/Controllers/CatalogController.php`
-- diubah `resources/views/customer/index.blade.php`
+- **baru** `app/Http/Controllers/CatalogController.php`
+- **baru** `resources/views/customer/index.blade.php`
+- **baru** `tests/Feature/Us04KatalogTest.php`
+- diubah `routes/web.php`
+- dihapus `resources/views/home.blade.php`
 
 ## Menjalankan
 
