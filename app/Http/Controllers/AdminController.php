@@ -64,8 +64,8 @@ class AdminController extends Controller
         ]);
         $verifikasi = $data['status_verifikasi'] === Vendor::TERVERIFIKASI;
 
-        if ($verifikasi && ! $this->dokumenTervalidasi($vendor)) {
-            return back()->withErrors(['status_verifikasi' => 'Vendor baru dapat diverifikasi jika dokumen KTP dan NIB/SIUP sudah diunggah dan dinyatakan valid.']);
+        if ($verifikasi && ($alasan = $this->alasanBelumBisaDiverifikasi($vendor))) {
+            return back()->withErrors(['status_verifikasi' => $alasan]);
         }
 
         DB::transaction(function () use ($vendor, $data): void {
@@ -75,11 +75,22 @@ class AdminController extends Controller
         return redirect()->route('admin.verifikasi')->with('status', 'Status verifikasi '.$vendor->nama_usaha.' diperbarui.');
     }
 
-    /** KTP dan NIB/SIUP sudah diunggah dan sudah dinyatakan valid oleh admin (lewat halaman detail verifikasi). */
-    private function dokumenTervalidasi(Vendor $vendor): bool
+    /**
+     * Syarat verifikasi: KTP dan NIB/SIUP sudah diunggah, tidak ditolak, dan sudah ditandai Valid oleh admin
+     * di halaman detail verifikasi. Mengembalikan pesan error bila syarat belum terpenuhi, atau null bila sudah.
+     */
+    private function alasanBelumBisaDiverifikasi(Vendor $vendor): ?string
     {
-        $valid = $vendor->dokumenLegalitas()->where('status_verifikasi', DokumenLegalitas::VALID)->pluck('jenis_dokumen');
+        $dokumen = $vendor->dokumenLegalitas()->get();
+        $lengkap = fn ($jenis) => $jenis->contains('KTP') && $jenis->intersect(['NIB', 'SIUP'])->isNotEmpty();
 
-        return $valid->contains('KTP') && $valid->intersect(['NIB', 'SIUP'])->isNotEmpty();
+        if (! $lengkap($dokumen->where('status_verifikasi', '!=', DokumenLegalitas::DITOLAK)->pluck('jenis_dokumen'))) {
+            return 'Vendor baru dapat diverifikasi jika dokumen KTP dan NIB/SIUP sudah diunggah dan tidak ada yang ditolak.';
+        }
+        if (! $lengkap($dokumen->where('status_verifikasi', DokumenLegalitas::VALID)->pluck('jenis_dokumen'))) {
+            return 'Dokumen KTP dan NIB/SIUP belum ditandai Valid. Periksa dokumen di halaman detail vendor terlebih dahulu.';
+        }
+
+        return null;
     }
 }
