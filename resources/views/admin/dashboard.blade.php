@@ -9,6 +9,7 @@
         </div>
         <div class="admin-shortcuts">
             <a href="{{ route('admin.verifikasi') }}"><span><x-icon name="shield" /></span><strong>Verifikasi vendor</strong><small>Tinjau dokumen legalitas</small></a>
+            <a href="{{ route('admin.kategori') }}"><span><x-icon name="briefcase" /></span><strong>Kategori layanan</strong><small>Kelola kategori katalog</small></a>
         </div>
     </section>
 @endsection

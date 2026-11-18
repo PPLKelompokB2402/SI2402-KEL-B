@@ -14,6 +14,7 @@
         'inisial' => $portalUser->inisial,
         'items' => [
             ['name' => 'super-admin.dashboard', 'label' => 'Ringkasan', 'icon' => 'grid'],
+            ['name' => 'super-admin.kategori', 'label' => 'Kategori', 'icon' => 'briefcase'],
         ],
     ])
 </body>
