@@ -64,37 +64,22 @@ class AdminController extends Controller
         ]);
         $verifikasi = $data['status_verifikasi'] === Vendor::TERVERIFIKASI;
 
-        if ($verifikasi && ! $this->dokumenLengkap($vendor)) {
-            return back()->withErrors(['status_verifikasi' => 'Vendor baru dapat diverifikasi jika dokumen KTP dan NIB/SIUP sudah diunggah dan tidak ada yang ditolak.']);
+        if ($verifikasi && ! $this->dokumenTervalidasi($vendor)) {
+            return back()->withErrors(['status_verifikasi' => 'Vendor baru dapat diverifikasi jika dokumen KTP dan NIB/SIUP sudah diunggah dan dinyatakan valid.']);
         }
 
-        $admin = $request->user();
-        DB::transaction(function () use ($vendor, $data, $verifikasi, $admin): void {
-            if ($verifikasi) {
-                // Dokumen yang belum diperiksa ikut dinyatakan valid oleh admin yang memverifikasi.
-                $vendor->dokumenLegalitas()->where('status_verifikasi', DokumenLegalitas::MENUNGGU)
-                    ->update(['status_verifikasi' => DokumenLegalitas::VALID, 'id_admin' => $admin->id_user]);
-            }
+        DB::transaction(function () use ($vendor, $data): void {
             $vendor->update(['status_verifikasi' => $data['status_verifikasi']]);
-            DB::table('audit_logs')->insert([
-                'id_admin' => $admin->id_user,
-                'aksi' => 'ubah_status_vendor',
-                'entitas' => 'vendor',
-                'id_entitas' => $vendor->id_vendor,
-                'keterangan' => 'Status verifikasi diubah menjadi '.$data['status_verifikasi'],
-                'created_at' => now(),
-            ]);
         });
 
         return redirect()->route('admin.verifikasi')->with('status', 'Status verifikasi '.$vendor->nama_usaha.' diperbarui.');
     }
 
-    /** KTP dan NIB/SIUP sudah diunggah dan tidak ada yang ditolak. */
-    private function dokumenLengkap(Vendor $vendor): bool
+    /** KTP dan NIB/SIUP sudah diunggah dan sudah dinyatakan valid oleh admin (lewat halaman detail verifikasi). */
+    private function dokumenTervalidasi(Vendor $vendor): bool
     {
-        $dokumen = $vendor->dokumenLegalitas()->get();
-        $aktif = $dokumen->where('status_verifikasi', '!=', DokumenLegalitas::DITOLAK)->pluck('jenis_dokumen');
+        $valid = $vendor->dokumenLegalitas()->where('status_verifikasi', DokumenLegalitas::VALID)->pluck('jenis_dokumen');
 
-        return $aktif->contains('KTP') && $aktif->intersect(['NIB', 'SIUP'])->isNotEmpty();
+        return $valid->contains('KTP') && $valid->intersect(['NIB', 'SIUP'])->isNotEmpty();
     }
 }
