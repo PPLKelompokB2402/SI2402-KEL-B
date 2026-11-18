@@ -21,7 +21,7 @@ Route::get('/media/portofolio/{portofolio}', [MediaController::class, 'portofoli
 Route::get('/media/dokumen/{dokumen}', [MediaController::class, 'dokumen'])->name('media.dokumen');
 
 /*
-| Autentikasi — login & register dengan session (satu halaman login untuk semua peran)
+| Autentikasi — login admin & super admin memakai URL terpisah (PBI-10)
 */
 Route::middleware('guest:web')->group(function () {
     Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
@@ -29,8 +29,14 @@ Route::middleware('guest:web')->group(function () {
     Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 });
+Route::get('/admin/login', [AuthController::class, 'adminLoginForm'])->middleware('guest:admin')->name('admin.login');
+Route::post('/admin/login', [AuthController::class, 'adminLogin'])->middleware(['guest:admin', 'throttle:10,1'])->name('admin.login.store');
+Route::get('/super-admin/login', [AuthController::class, 'superAdminLoginForm'])->middleware('guest:super_admin')->name('super-admin.login');
+Route::post('/super-admin/login', [AuthController::class, 'superAdminLogin'])->middleware(['guest:super_admin', 'throttle:10,1'])->name('super-admin.login.store');
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:web')->name('logout');
+Route::post('/admin/logout', [AuthController::class, 'adminLogout'])->middleware('auth:admin')->name('admin.logout');
+Route::post('/super-admin/logout', [AuthController::class, 'superAdminLogout'])->middleware('auth:super_admin')->name('super-admin.logout');
 
 
 /*
@@ -51,7 +57,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth:web', 'role:vendor']
 /*
 | Portal administrator — PBI-07, 08, 09, 16, 17, 18, 19
 */
-Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'role:admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin', 'role:admin'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/verifikasi', [AdminController::class, 'verifikasi'])->name('verifikasi');
     Route::get('/verifikasi/{vendor}', [AdminController::class, 'detailVerifikasi'])->name('verifikasi.detail');
@@ -65,7 +71,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'role:admin'])->
 /*
 | Portal super admin — PBI-11, 12 (+ kategori & audit log)
 */
-Route::prefix('super-admin')->name('super-admin.')->middleware(['auth:web', 'role:super_admin'])->group(function () {
+Route::prefix('super-admin')->name('super-admin.')->middleware(['auth:super_admin', 'role:super_admin'])->group(function () {
     Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori');
     Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');

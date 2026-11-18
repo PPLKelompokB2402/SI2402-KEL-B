@@ -48,6 +48,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        // Guard terpisah agar sesi admin & super admin tidak bercampur dengan sesi pelanggan/vendor (PBI-10).
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'super_admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     /*

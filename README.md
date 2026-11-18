@@ -1,21 +1,29 @@
-# KolaboraEO — Tahap 09: PBI-09 Kelola kategori
+# KolaboraEO — Tahap 10: PBI-10 Portal login admin terpisah
 
-Admin dan super admin mengelola kategori layanan.
+Login admin dan super admin dipisah dari login pelanggan/vendor.
 
 ## Yang ditambahkan pada tahap ini
 
-- Tambah & ubah kategori di `/admin/kategori` dan `/super-admin/kategori`; nama kategori unik.
+- URL `/admin/login` dan `/super-admin/login` dengan guard sesi terpisah (`admin`, `super_admin`).
+- `/login` kini hanya untuk pelanggan & vendor; peran tidak bisa masuk lewat portal yang salah.
 
-## File yang berubah dari tahap 08
+## File yang berubah dari tahap 09
 
-- **baru** `app/Http/Controllers/KategoriController.php`
-- **baru** `resources/views/kategori/index.blade.php`
-- **baru** `tests/Feature/Us09KategoriTest.php`
-- diubah `resources/views/admin/dashboard.blade.php`
+- **baru** `resources/views/auth/admin-login.blade.php`
+- **baru** `resources/views/auth/super-admin-login.blade.php`
+- **baru** `tests/Feature/Us10PortalAdminTest.php`
+- diubah `app/Http/Controllers/AuthController.php`
+- diubah `app/Http/Controllers/MediaController.php`
+- diubah `bootstrap/app.php`
+- diubah `config/auth.php`
+- diubah `resources/views/auth/login.blade.php`
 - diubah `resources/views/layouts/admin.blade.php`
 - diubah `resources/views/layouts/super-admin.blade.php`
-- diubah `resources/views/super-admin/dashboard.blade.php`
 - diubah `routes/web.php`
+- diubah `tests/Feature/KolaboraTestCase.php`
+- diubah `tests/Feature/Us00AutentikasiTest.php`
+- diubah `tests/Feature/Us00PerintahAkunTest.php`
+- diubah `tests/Feature/Us07TinjauDokumenTest.php`
 
 ## Menjalankan
 
@@ -33,5 +41,3 @@ php artisan test                 # pengujian tahap ini
 Isi `SUPER_ADMIN_NAME`, `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD` di `.env` sebelum seeding untuk membuat akun Super Admin pertama.
 
 Akun administrator pada tahap ini dibuat dengan `php artisan admin:create-admin "Nama Admin" admin@contoh.com`.
-
-Admin dan super admin masuk lewat `/login` yang sama dengan pelanggan/vendor.

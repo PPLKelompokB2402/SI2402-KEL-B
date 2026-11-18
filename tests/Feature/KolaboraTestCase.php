@@ -28,13 +28,13 @@ abstract class KolaboraTestCase extends TestCase
     /** Masuk sebagai administrator memakai guard yang berlaku pada tahap ini. */
     protected function sebagaiAdmin(User $admin): static
     {
-        return $this->actingAs($admin, 'web');
+        return $this->actingAs($admin, 'admin');
     }
 
     /** Masuk sebagai super admin memakai guard yang berlaku pada tahap ini. */
     protected function sebagaiSuperAdmin(User $superAdmin): static
     {
-        return $this->actingAs($superAdmin, 'web');
+        return $this->actingAs($superAdmin, 'super_admin');
     }
 
     protected function buatVendor(array $attributes = []): Vendor
