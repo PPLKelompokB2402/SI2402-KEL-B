@@ -29,11 +29,11 @@ class MediaController extends Controller
 
     private function isPetugas(): bool
     {
-        // Sebelum PBI-10 semua peran masuk lewat guard "web".
-        $user = Auth::guard('web')->user();
+        $admin = Auth::guard('admin')->user();
+        $super = Auth::guard('super_admin')->user();
 
-        return $user !== null && $user->status_aktif
-            && in_array($user->role, [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN], true);
+        return ($admin?->role === User::ROLE_ADMIN && $admin->status_aktif)
+            || ($super?->role === User::ROLE_SUPER_ADMIN && $super->status_aktif);
     }
 
     private function stream(string $path, bool $public = false): StreamedResponse

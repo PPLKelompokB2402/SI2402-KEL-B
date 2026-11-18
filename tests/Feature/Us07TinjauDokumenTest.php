@@ -38,7 +38,7 @@ class Us07TinjauDokumenTest extends KolaboraTestCase
         $dokumen = $vendor->dokumenLegalitas()->create(['jenis_dokumen' => 'KTP', 'no_dokumen' => '1', 'media_url' => 'legalitas/a.pdf']);
 
         $this->actingAs($vendor->user, 'web')->patch(route('admin.dokumen.periksa', $dokumen), ['status_verifikasi' => 'valid'])
-            ->assertForbidden();
+            ->assertRedirect('/admin/login');
         $this->assertSame('menunggu', $dokumen->fresh()->status_verifikasi);
     }
 }

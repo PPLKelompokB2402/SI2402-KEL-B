@@ -92,18 +92,6 @@ class Us00AutentikasiTest extends KolaboraTestCase
 
         $pelanggan = User::factory()->create();
         $this->actingAs($pelanggan, 'web')->get('/vendor/dashboard')->assertForbidden();
-        $this->actingAs($pelanggan, 'web')->get('/admin')->assertForbidden();
-    }
-
-    public function test_admin_dan_super_admin_masuk_lewat_halaman_login_yang_sama(): void
-    {
-        $this->buatAdmin('admin@example.test');
-        $this->post('/login', ['email' => 'admin@example.test', 'password' => 'password'])->assertRedirect('/admin');
-        $this->get('/admin')->assertOk();
-        $this->post('/logout');
-
-        $super = $this->buatSuperAdmin();
-        $this->post('/login', ['email' => $super->email, 'password' => 'password'])->assertRedirect('/super-admin/dashboard');
-        $this->get('/super-admin/dashboard')->assertOk();
+        $this->actingAs($pelanggan, 'web')->get('/admin')->assertRedirect('/admin/login');
     }
 }

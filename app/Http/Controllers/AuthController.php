@@ -11,8 +11,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
- * Login (satu halaman untuk semua peran) dan registrasi akun pelanggan/vendor.
- * Sesi login disimpan di tabel sessions (SESSION_DRIVER=database).
+ * Login pelanggan/vendor, login administrator dan super admin pada URL terpisah (PBI-10),
+ * serta registrasi akun pelanggan/vendor.
  */
 class AuthController extends Controller
 {
@@ -21,9 +21,29 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    public function adminLoginForm(): View
+    {
+        return view('auth.admin-login');
+    }
+
+    public function superAdminLoginForm(): View
+    {
+        return view('auth.super-admin-login');
+    }
+
     public function login(Request $request): RedirectResponse
     {
-        return $this->authenticate($request, 'web', [User::ROLE_PELANGGAN, User::ROLE_VENDOR, User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        return $this->authenticate($request, 'web', [User::ROLE_PELANGGAN, User::ROLE_VENDOR]);
+    }
+
+    public function adminLogin(Request $request): RedirectResponse
+    {
+        return $this->authenticate($request, 'admin', [User::ROLE_ADMIN]);
+    }
+
+    public function superAdminLogin(Request $request): RedirectResponse
+    {
+        return $this->authenticate($request, 'super_admin', [User::ROLE_SUPER_ADMIN]);
     }
 
     private function authenticate(Request $request, string $guard, array $roles): RedirectResponse
@@ -97,12 +117,24 @@ class AuthController extends Controller
         return $this->logoutGuard($request, 'web');
     }
 
+    public function adminLogout(Request $request): RedirectResponse
+    {
+        return $this->logoutGuard($request, 'admin');
+    }
+
+    public function superAdminLogout(Request $request): RedirectResponse
+    {
+        return $this->logoutGuard($request, 'super_admin');
+    }
+
     private function logoutGuard(Request $request, string $guard): RedirectResponse
     {
         Auth::guard($guard)->logout();
         $request->session()->migrate(true);
 
         return redirect()->to(match ($guard) {
+            'admin' => route('admin.login'),
+            'super_admin' => route('super-admin.login'),
             default => route('vendors.index'),
         });
     }

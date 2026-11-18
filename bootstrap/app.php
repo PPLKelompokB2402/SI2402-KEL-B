@@ -14,9 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([__DIR__.'/../app/Console/Commands'])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectGuestsTo(fn (Request $request) => match (true) {
+            $request->is('super-admin', 'super-admin/*') => route('super-admin.login'),
+            $request->is('admin', 'admin/*') => route('admin.login'),
             default => route('login'),
         });
         $middleware->redirectUsersTo(fn (Request $request) => match (true) {
+            $request->is('super-admin', 'super-admin/*') => route('super-admin.dashboard'),
+            $request->is('admin', 'admin/*') => route('admin.dashboard'),
             default => route('vendors.index'),
         });
         $middleware->alias([

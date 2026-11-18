@@ -17,7 +17,7 @@ class Us00PerintahAkunTest extends KolaboraTestCase
 
         $user = User::where('email', 'boot@example.test')->firstOrFail();
         $this->assertDatabaseHas('super_admin', ['id_super_admin' => $user->id_user]);
-        $this->post('/login', ['email' => 'boot@example.test', 'password' => 'rahasia123'])->assertRedirect('/super-admin/dashboard');
+        $this->post('/super-admin/login', ['email' => 'boot@example.test', 'password' => 'rahasia123'])->assertRedirect('/super-admin/dashboard');
         $this->get('/super-admin/dashboard')->assertOk();
     }
 
