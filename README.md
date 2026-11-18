@@ -1,16 +1,21 @@
-# KolaboraEO — Tahap 08b: PBI-08 Status verifikasi vendor (frontend)
+# KolaboraEO — Tahap 09: PBI-09 Kelola kategori
 
-Tombol Tolak dan Verifikasi di halaman admin, memakai endpoint dari tahap 08a.
+Admin dan super admin mengelola kategori layanan.
 
 ## Yang ditambahkan pada tahap ini
 
-- Tombol **Tolak** dan **Verifikasi** di setiap baris tabel `/admin/verifikasi`. Keduanya mengirim `PATCH` ke `admin.vendors.status`.
-- Tombol Verifikasi nonaktif, dengan keterangan, bila dokumen KTP dan NIB/SIUP belum lengkap.
-- Hasilnya tampil lewat pesan flash yang sudah ada; vendor yang terverifikasi langsung muncul di katalog.
+- Tambah & ubah kategori di `/admin/kategori` dan `/super-admin/kategori`; nama kategori unik.
 
-## File yang berubah dari tahap 08a
+## File yang berubah dari tahap 08
 
-- diubah `resources/views/admin/verifikasi.blade.php`
+- **baru** `app/Http/Controllers/KategoriController.php`
+- **baru** `resources/views/kategori/index.blade.php`
+- **baru** `tests/Feature/Us09KategoriTest.php`
+- diubah `resources/views/admin/dashboard.blade.php`
+- diubah `resources/views/layouts/admin.blade.php`
+- diubah `resources/views/layouts/super-admin.blade.php`
+- diubah `resources/views/super-admin/dashboard.blade.php`
+- diubah `routes/web.php`
 
 ## Menjalankan
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\VendorPortalController;
@@ -56,6 +57,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'role:admin'])->
     Route::get('/verifikasi/{vendor}', [AdminController::class, 'detailVerifikasi'])->name('verifikasi.detail');
     Route::patch('/dokumen/{dokumen}', [AdminController::class, 'periksaDokumen'])->name('dokumen.periksa');
     Route::patch('/vendors/{vendor}/status', [AdminController::class, 'ubahStatusVendor'])->name('vendors.status');
+    Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori');
+    Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::patch('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
 });
 
 /*
@@ -63,4 +67,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'role:admin'])->
 */
 Route::prefix('super-admin')->name('super-admin.')->middleware(['auth:web', 'role:super_admin'])->group(function () {
     Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori');
+    Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::patch('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
 });
