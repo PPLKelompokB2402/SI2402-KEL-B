@@ -56,4 +56,37 @@ class AdminController extends Controller
 
         return back()->with('status', 'Hasil pemeriksaan dokumen disimpan.');
     }
+
+    public function ubahStatusVendor(Request $request, Vendor $vendor): RedirectResponse
+    {
+        $data = $request->validate([
+            'status_verifikasi' => ['required', Rule::in(array_keys(Vendor::STATUS_LABEL))],
+        ]);
+        $verifikasi = $data['status_verifikasi'] === Vendor::TERVERIFIKASI;
+
+        if ($verifikasi && ! $this->dokumenLengkap($vendor)) {
+            return back()->withErrors(['status_verifikasi' => 'Vendor baru dapat diverifikasi jika dokumen KTP dan NIB/SIUP sudah diunggah dan tidak ada yang ditolak.']);
+        }
+
+        $admin = $request->user();
+        DB::transaction(function () use ($vendor, $data, $verifikasi, $admin): void {
+            if ($verifikasi) {
+                // Dokumen yang belum diperiksa ikut dinyatakan valid oleh admin yang memverifikasi.
+                $vendor->dokumenLegalitas()->where('status_verifikasi', DokumenLegalitas::MENUNGGU)
+                    ->update(['status_verifikasi' => DokumenLegalitas::VALID, 'id_admin' => $admin->id_user]);
+            }
+            $vendor->update(['status_verifikasi' => $data['status_verifikasi']]);
+        });
+
+        return redirect()->route('admin.verifikasi')->with('status', 'Status verifikasi '.$vendor->nama_usaha.' diperbarui.');
+    }
+
+    /** KTP dan NIB/SIUP sudah diunggah dan tidak ada yang ditolak. */
+    private function dokumenLengkap(Vendor $vendor): bool
+    {
+        $dokumen = $vendor->dokumenLegalitas()->get();
+        $aktif = $dokumen->where('status_verifikasi', '!=', DokumenLegalitas::DITOLAK)->pluck('jenis_dokumen');
+
+        return $aktif->contains('KTP') && $aktif->intersect(['NIB', 'SIUP'])->isNotEmpty();
+    }
 }

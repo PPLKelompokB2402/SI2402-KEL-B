@@ -55,6 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'role:admin'])->
     Route::get('/verifikasi', [AdminController::class, 'verifikasi'])->name('verifikasi');
     Route::get('/verifikasi/{vendor}', [AdminController::class, 'detailVerifikasi'])->name('verifikasi.detail');
     Route::patch('/dokumen/{dokumen}', [AdminController::class, 'periksaDokumen'])->name('dokumen.periksa');
+    Route::patch('/vendors/{vendor}/status', [AdminController::class, 'ubahStatusVendor'])->name('vendors.status');
 });
 
 /*

@@ -1,20 +1,20 @@
-# KolaboraEO — Tahap 07: PBI-07 Admin meninjau dokumen
+# KolaboraEO — Tahap 08a: PBI-08 Status verifikasi vendor (backend)
 
-Administrator memeriksa dokumen legalitas vendor.
+Logika verifikasi dan penolakan vendor di sisi server. Tombolnya di halaman admin baru ditambahkan di tahap 08b.
 
 ## Yang ditambahkan pada tahap ini
 
-- Antrean verifikasi `/admin/verifikasi` dan detail `/admin/verifikasi/{vendor}`.
-- Dokumen dinyatakan valid/ditolak; penolakan wajib disertai catatan yang tampil di halaman vendor.
+- Route `PATCH /admin/vendors/{vendor}/status` (nama `admin.vendors.status`) yang ditangani `AdminController::ubahStatusVendor`.
+- Validasi nilai status: `menunggu`, `terverifikasi`, atau `ditolak`.
+- Vendor hanya bisa diverifikasi jika KTP dan NIB/SIUP sudah diunggah dan tidak ada yang ditolak (method `dokumenLengkap`); bila belum, permintaan ditolak dengan pesan error.
+- Saat vendor diverifikasi, dokumen yang masih menunggu ikut dinyatakan valid oleh admin yang memverifikasi, dalam satu transaksi database.
+- Pengujian backend di `tests/Feature/Us08StatusVerifikasiTest.php`.
+- Belum ada tombol di tampilan. Endpoint dicoba lewat `php artisan test --filter=Us08`.
 
-## File yang berubah dari tahap 06
+## File yang berubah dari tahap 07
 
-- **baru** `resources/views/admin/verifikasi-detail.blade.php`
-- **baru** `resources/views/admin/verifikasi.blade.php`
-- **baru** `tests/Feature/Us07TinjauDokumenTest.php`
+- **baru** `tests/Feature/Us08StatusVerifikasiTest.php`
 - diubah `app/Http/Controllers/AdminController.php`
-- diubah `resources/views/admin/dashboard.blade.php`
-- diubah `resources/views/layouts/admin.blade.php`
 - diubah `routes/web.php`
 
 ## Menjalankan
