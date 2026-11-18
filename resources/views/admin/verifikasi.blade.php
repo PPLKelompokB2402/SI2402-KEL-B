@@ -10,17 +10,16 @@
             <div class="table-scroll"><table class="admin-table verification-table"><thead><tr><th>Nama vendor</th><th>Kategori</th><th>Tanggal daftar</th><th>Aksi</th></tr></thead><tbody>
                 @forelse($vendors as $vendor)
                     @php
-                        $diunggah = $vendor->dokumenLegalitas->pluck('jenis_dokumen');
-                        $valid = $vendor->dokumenLegalitas->where('status_verifikasi', 'valid')->pluck('jenis_dokumen');
-                        $adaLengkap = $diunggah->contains('KTP') && $diunggah->intersect(['NIB', 'SIUP'])->isNotEmpty();
-                        $lengkap = $valid->contains('KTP') && $valid->intersect(['NIB', 'SIUP'])->isNotEmpty();
+                        $cek = fn ($jenis) => $jenis->contains('KTP') && $jenis->intersect(['NIB', 'SIUP'])->isNotEmpty();
+                        $adaLengkap = $cek($vendor->dokumenLegalitas->where('status_verifikasi', '!=', 'ditolak')->pluck('jenis_dokumen'));
+                        $lengkap = $cek($vendor->dokumenLegalitas->where('status_verifikasi', 'valid')->pluck('jenis_dokumen'));
                         $keterangan = $lengkap ? 'Dokumen valid' : ($adaLengkap ? 'Dokumen belum divalidasi' : 'Dokumen belum lengkap');
-                        $alasan = $adaLengkap ? 'Tandai dokumen KTP dan NIB/SIUP sebagai Valid terlebih dahulu' : 'Dokumen KTP dan NIB/SIUP belum diunggah';
+                        $alasan = $adaLengkap ? 'Tandai dokumen KTP dan NIB/SIUP sebagai Valid terlebih dahulu' : 'Dokumen KTP dan NIB/SIUP belum diunggah atau ada yang ditolak';
                     @endphp
                     <tr><td><strong>{{ $vendor->nama_usaha }}</strong><small>{{ $vendor->user->nama }} · {{ $keterangan }}</small></td><td><span class="category-tag">{{ $vendor->kategori->nama_kategori }}</span></td><td>{{ $vendor->user->created_at->format('d M Y') }}</td><td class="verification-actions">
                         <a class="icon-action" href="{{ route('admin.verifikasi.detail', $vendor) }}" title="Tinjau dokumen">◎</a>
                         <form method="POST" action="{{ route('admin.vendors.status', $vendor) }}">@csrf @method('PATCH')<input type="hidden" name="status_verifikasi" value="ditolak"><button class="reject-button" type="submit">Tolak</button></form>
-                        <form method="POST" action="{{ route('admin.vendors.status', $vendor) }}">@csrf @method('PATCH')<input type="hidden" name="status_verifikasi" value="terverifikasi"><button class="button button-dark" type="submit" @disabled(!$lengkap) title="{{ $lengkap ? '' : $alasan }}">Verifikasi</button></form>
+                        <form method="POST" action="{{ route('admin.vendors.status', $vendor) }}">@csrf @method('PATCH')<input type="hidden" name="status_verifikasi" value="terverifikasi"><button class="button button-dark" type="submit" @unless($lengkap) aria-disabled="true" style="opacity: .5; cursor: not-allowed" title="{{ $alasan }}" @endunless>Verifikasi</button></form>
                     </td></tr>
                 @empty
                     <tr><td colspan="4"><div class="empty-cell">Tidak ada pengajuan verifikasi yang menunggu.</div></td></tr>
