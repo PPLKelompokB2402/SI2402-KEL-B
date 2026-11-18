@@ -1,22 +1,20 @@
-# KolaboraEO — Tahap 06: PBI-06 Detail vendor
+# KolaboraEO — Tahap 07: PBI-07 Admin meninjau dokumen
 
-Halaman detail vendor untuk pelanggan.
+Administrator memeriksa dokumen legalitas vendor.
 
 ## Yang ditambahkan pada tahap ini
 
-- Tab Ringkasan, Galeri Portofolio, Harga & Detail; tombol hubungi vendor via WhatsApp.
-- Vendor yang belum terverifikasi menghasilkan 404.
+- Antrean verifikasi `/admin/verifikasi` dan detail `/admin/verifikasi/{vendor}`.
+- Dokumen dinyatakan valid/ditolak; penolakan wajib disertai catatan yang tampil di halaman vendor.
 
-## File yang berubah dari tahap 05
+## File yang berubah dari tahap 06
 
-- **baru** `resources/views/customer/harga.blade.php`
-- **baru** `resources/views/customer/partials/detail-header.blade.php`
-- **baru** `resources/views/customer/portofolio.blade.php`
-- **baru** `resources/views/customer/show.blade.php`
-- **baru** `tests/Feature/Us06DetailVendorTest.php`
-- diubah `app/Http/Controllers/CatalogController.php`
-- diubah `resources/views/customer/index.blade.php`
-- diubah `resources/views/vendor/dashboard.blade.php`
+- **baru** `resources/views/admin/verifikasi-detail.blade.php`
+- **baru** `resources/views/admin/verifikasi.blade.php`
+- **baru** `tests/Feature/Us07TinjauDokumenTest.php`
+- diubah `app/Http/Controllers/AdminController.php`
+- diubah `resources/views/admin/dashboard.blade.php`
+- diubah `resources/views/layouts/admin.blade.php`
 - diubah `routes/web.php`
 
 ## Menjalankan

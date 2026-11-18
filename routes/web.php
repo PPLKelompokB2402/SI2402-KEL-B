@@ -52,6 +52,9 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth:web', 'role:vendor']
 */
 Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'role:admin'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/verifikasi', [AdminController::class, 'verifikasi'])->name('verifikasi');
+    Route::get('/verifikasi/{vendor}', [AdminController::class, 'detailVerifikasi'])->name('verifikasi.detail');
+    Route::patch('/dokumen/{dokumen}', [AdminController::class, 'periksaDokumen'])->name('dokumen.periksa');
 });
 
 /*
