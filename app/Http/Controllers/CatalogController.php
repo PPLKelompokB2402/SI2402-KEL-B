@@ -48,6 +48,37 @@ class CatalogController extends Controller
         ]);
     }
 
+    public function show(Request $request, Vendor $vendor): View
+    {
+        return $this->detail($request, $vendor, 'show');
+    }
+
+    public function portofolio(Request $request, Vendor $vendor): View
+    {
+        return $this->detail($request, $vendor, 'portofolio');
+    }
+
+    public function harga(Request $request, Vendor $vendor): View
+    {
+        return $this->detail($request, $vendor, 'harga');
+    }
+
+    private function detail(Request $request, Vendor $vendor, string $tab): View
+    {
+        abort_unless($vendor->status_verifikasi === Vendor::TERVERIFIKASI, 404);
+
+        $vendor->load([
+            'kategori',
+            'user',
+            'portofolio',
+        ]);
+
+        return view('customer.'.$tab, [
+            'vendor' => $vendor,
+            'activeTab' => $tab,
+        ]);
+    }
+
     private function baseQuery()
     {
         return Vendor::terverifikasi()

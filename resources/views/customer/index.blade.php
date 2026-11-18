@@ -51,11 +51,11 @@
                     <div class="vendor-grid">
                         @foreach($vendors as $vendor)
                             <article class="vendor-card">
-                                <div class="vendor-image" @if($vendor->sampul_url) style="--cover: url('{{ $vendor->sampul_url }}')" @endif>
+                                <a class="vendor-image" href="{{ route('vendors.show', $vendor) }}" @if($vendor->sampul_url) style="--cover: url('{{ $vendor->sampul_url }}')" @endif>
                                     <span class="image-label">✦ {{ $vendor->kategori->nama_kategori }}</span>
-                                </div>
+                                </a>
                                 <div class="vendor-card-body">
-                                    <div class="vendor-title-row"><h3>{{ $vendor->nama_usaha }}</h3></div>
+                                    <div class="vendor-title-row"><h3><a href="{{ route('vendors.show', $vendor) }}">{{ $vendor->nama_usaha }}</a></h3></div>
                                     <div class="vendor-meta"><span>⌖ {{ $vendor->lokasi_layanan }}</span></div>
                                     <div class="vendor-card-bottom"><div><small>Mulai dari</small><strong>{{ $vendor->harga_format }}</strong></div><span class="verified-badge">✓ Profil terverifikasi</span></div>
                                 </div>

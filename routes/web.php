@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 | Pelanggan (publik) — PBI-04, 05, 06, 14
 */
 Route::get('/', [CatalogController::class, 'index'])->name('vendors.index');
+Route::get('/vendors/{vendor}', [CatalogController::class, 'show'])->name('vendors.show');
+Route::get('/vendors/{vendor}/portofolio', [CatalogController::class, 'portofolio'])->name('vendors.portofolio');
+Route::get('/vendors/{vendor}/harga', [CatalogController::class, 'harga'])->name('vendors.harga');
 
 Route::get('/media/portofolio/{portofolio}', [MediaController::class, 'portofolio'])->name('media.portofolio');
 Route::get('/media/dokumen/{dokumen}', [MediaController::class, 'dokumen'])->name('media.dokumen');
