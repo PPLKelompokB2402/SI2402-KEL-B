@@ -1,16 +1,23 @@
-# KolaboraEO — Tahap 05: PBI-05 Pencarian & filter
+# KolaboraEO — Tahap 06: PBI-06 Detail vendor
 
-Pelanggan mencari dan menyaring katalog.
+Halaman detail vendor untuk pelanggan.
 
 ## Yang ditambahkan pada tahap ini
 
-- Kata kunci, kategori, lokasi, kisaran harga minimum–maksimum, urutkan berdasarkan harga.
+- Tab Ringkasan, Galeri Portofolio, Harga & Detail; tombol hubungi vendor via WhatsApp.
+- Vendor yang belum terverifikasi menghasilkan 404.
 
-## File yang berubah dari tahap 04
+## File yang berubah dari tahap 05
 
-- **baru** `tests/Feature/Us05PencarianFilterTest.php`
+- **baru** `resources/views/customer/harga.blade.php`
+- **baru** `resources/views/customer/partials/detail-header.blade.php`
+- **baru** `resources/views/customer/portofolio.blade.php`
+- **baru** `resources/views/customer/show.blade.php`
+- **baru** `tests/Feature/Us06DetailVendorTest.php`
 - diubah `app/Http/Controllers/CatalogController.php`
 - diubah `resources/views/customer/index.blade.php`
+- diubah `resources/views/vendor/dashboard.blade.php`
+- diubah `routes/web.php`
 
 ## Menjalankan
 

@@ -6,6 +6,8 @@
     <section class="portal-page vendor-dashboard-page">
         <div class="portal-heading">
             <div><span class="section-kicker">Portal vendor</span><h1>Ringkasan bisnis</h1><p>Kelola profil dan pastikan informasi bisnis selalu terbaru.</p></div>
+            @php($publik = $vendors->firstWhere('status_verifikasi', 'terverifikasi'))
+            @if($publik)<a class="button button-outline" href="{{ route('vendors.show', $publik) }}">◎ &nbsp; Lihat profil publik</a>@endif
         </div>
         <div class="portal-stats vendor-overview-stats">
             <article><span class="metric-icon"><x-icon name="store" /></span><strong>{{ $stats['usaha'] }}</strong><span>Profil usaha</span></article>
