@@ -15,6 +15,8 @@
                     @endphp
                     <tr><td><strong>{{ $vendor->nama_usaha }}</strong><small>{{ $vendor->user->nama }} · {{ $lengkap ? 'Dokumen lengkap' : 'Dokumen belum lengkap' }}</small></td><td><span class="category-tag">{{ $vendor->kategori->nama_kategori }}</span></td><td>{{ $vendor->user->created_at->format('d M Y') }}</td><td class="verification-actions">
                         <a class="icon-action" href="{{ route('admin.verifikasi.detail', $vendor) }}" title="Tinjau dokumen">◎</a>
+                        <form method="POST" action="{{ route('admin.vendors.status', $vendor) }}">@csrf @method('PATCH')<input type="hidden" name="status_verifikasi" value="ditolak"><button class="reject-button" type="submit">Tolak</button></form>
+                        <form method="POST" action="{{ route('admin.vendors.status', $vendor) }}">@csrf @method('PATCH')<input type="hidden" name="status_verifikasi" value="terverifikasi"><button class="button button-dark" type="submit" @disabled(!$lengkap) title="{{ $lengkap ? '' : 'Dokumen KTP dan NIB/SIUP belum lengkap' }}">Verifikasi</button></form>
                     </td></tr>
                 @empty
                     <tr><td colspan="4"><div class="empty-cell">Tidak ada pengajuan verifikasi yang menunggu.</div></td></tr>
