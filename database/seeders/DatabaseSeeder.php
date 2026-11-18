@@ -26,14 +26,14 @@ class DatabaseSeeder extends Seeder
 
         $credentials = config('auth.super_admin');
 
-        if (array_filter($credentials, fn ($value) => filled($value)) === []) {
-            $this->command?->warn('Super Admin tidak dibuat. Isi SUPER_ADMIN_NAME, SUPER_ADMIN_EMAIL, dan SUPER_ADMIN_PASSWORD di .env.');
+        if (User::whereIn('role', [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN])->exists()) {
+            $this->command?->info('Akun administrator sudah tersedia.');
 
             return;
         }
 
-        if (User::whereIn('role', [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN])->exists()) {
-            $this->command?->info('Akun administrator sudah tersedia; Super Admin dari seeder dilewati.');
+        if (array_filter($credentials, fn ($value) => filled($value)) === []) {
+            $this->command?->warn('Super Admin tidak dibuat. Isi SUPER_ADMIN_NAME, SUPER_ADMIN_EMAIL, dan SUPER_ADMIN_PASSWORD di .env.');
 
             return;
         }

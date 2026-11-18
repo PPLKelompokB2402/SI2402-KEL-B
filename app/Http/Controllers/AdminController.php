@@ -76,6 +76,14 @@ class AdminController extends Controller
                     ->update(['status_verifikasi' => DokumenLegalitas::VALID, 'id_admin' => $admin->id_user]);
             }
             $vendor->update(['status_verifikasi' => $data['status_verifikasi']]);
+            DB::table('audit_logs')->insert([
+                'id_admin' => $admin->id_user,
+                'aksi' => 'ubah_status_vendor',
+                'entitas' => 'vendor',
+                'id_entitas' => $vendor->id_vendor,
+                'keterangan' => 'Status verifikasi diubah menjadi '.$data['status_verifikasi'],
+                'created_at' => now(),
+            ]);
         });
 
         return redirect()->route('admin.verifikasi')->with('status', 'Status verifikasi '.$vendor->nama_usaha.' diperbarui.');
