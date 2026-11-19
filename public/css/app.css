@@ -555,7 +555,8 @@ button { cursor: pointer; }
 .portfolio-manage-form .button { align-self: end; min-height: 43px; padding: 0 13px; font-size: 11px; }
 .managed-portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
 .managed-portfolio-grid article { overflow: hidden; border: 1px solid #e4eaf0; border-radius: 10px; }
-.managed-portfolio-cover { height: 150px; background: var(--cover) center/cover; }
+.managed-portfolio-cover { height: 150px; background: var(--cover) center/cover; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; }
+.managed-portfolio-cover:hover { opacity: 0.92; transform: scale(1.02); }
 .managed-portfolio-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px; }
 .managed-portfolio-meta strong { color: #384b64; font-size: 12px; }
 
