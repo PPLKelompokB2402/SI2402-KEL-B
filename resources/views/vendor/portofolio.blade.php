@@ -16,7 +16,19 @@
                 </form>
                 <div class="managed-portfolio-grid">
                     @forelse($vendor->portofolio as $item)
-                        <article><div class="managed-portfolio-cover" style="--cover: url('{{ route('media.portofolio', $item) }}')"></div><div class="managed-portfolio-meta"><strong>{{ $item->judul_proyek }}</strong><form method="POST" action="{{ route('vendor.portofolio.hapus', $item) }}" onsubmit="return confirm('Hapus portofolio ini?')">@csrf @method('DELETE')<button class="delete-icon" type="submit" aria-label="Hapus portofolio">×</button></form></div></article>
+                        <article>
+                            <a href="{{ route('media.portofolio', $item) }}" target="_blank" rel="noopener" title="Lihat foto: {{ $item->judul_proyek }}">
+                                <div class="managed-portfolio-cover" style="--cover: url('{{ route('media.portofolio', $item) }}')"></div>
+                            </a>
+                            <div class="managed-portfolio-meta">
+                                <strong>{{ $item->judul_proyek }}</strong>
+                                <form method="POST" action="{{ route('vendor.portofolio.hapus', $item) }}" onsubmit="return confirm('Hapus portofolio ini?')">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button class="delete-icon" type="submit" aria-label="Hapus portofolio">×</button>
+                                </form>
+                            </div>
+                        </article>
                     @empty
                         <p class="muted">Belum ada karya. Tambahkan portofolio pertama di atas.</p>
                     @endforelse
