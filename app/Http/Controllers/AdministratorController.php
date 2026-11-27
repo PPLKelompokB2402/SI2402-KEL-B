@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
- * US-11 — administrator mengelola akun administrator lain: membuat, mengedit,
+ * US-11 — super admin mengelola akun administrator: membuat, mengedit,
  * menonaktifkan/mengaktifkan kembali, dan menghapus. Minimal satu administrator harus tetap aktif.
  */
 class AdministratorController extends Controller
@@ -60,21 +60,15 @@ class AdministratorController extends Controller
         return back()->with('status', 'Akun administrator '.$user->nama.' berhasil diperbarui.');
     }
 
-    /** AC-02 & AC-05: menonaktifkan administrator lain atau mengaktifkannya kembali. */
+    /** AC-02 & AC-05: menonaktifkan administrator atau mengaktifkannya kembali; admin aktif terakhir tidak bisa dinonaktifkan. */
     public function ubahStatus(Request $request, User $user): RedirectResponse
     {
         abort_unless($user->role === User::ROLE_ADMIN, 404);
         $data = $request->validate(['status_aktif' => ['required', 'boolean']]);
         $aktif = (bool) $data['status_aktif'];
-        $pelaku = $request->user();
 
-        if (! $aktif) {
-            if ($user->is($pelaku)) {
-                return back()->withErrors(['status_aktif' => 'Anda tidak dapat menonaktifkan akun Anda sendiri.']);
-            }
-            if ($user->status_aktif && $this->jumlahAdminAktif() <= 1) {
-                return back()->withErrors(['status_aktif' => 'Minimal satu akun administrator harus tetap aktif.']);
-            }
+        if (! $aktif && $user->status_aktif && $this->jumlahAdminAktif() <= 1) {
+            return back()->withErrors(['status_aktif' => 'Minimal satu akun administrator harus tetap aktif.']);
         }
 
         if ($user->status_aktif === $aktif) {
@@ -88,15 +82,11 @@ class AdministratorController extends Controller
         return back()->with('status', 'Akun administrator '.$user->nama.' '.($aktif ? 'diaktifkan kembali.' : 'dinonaktifkan.'));
     }
 
-    /** AC-05: menghapus akun administrator lain; akun sendiri dan admin aktif terakhir tidak dapat dihapus. */
+    /** AC-05: menghapus akun administrator; admin aktif terakhir tidak dapat dihapus. */
     public function destroy(Request $request, User $user): RedirectResponse
     {
         abort_unless($user->role === User::ROLE_ADMIN, 404);
-        $pelaku = $request->user();
 
-        if ($user->is($pelaku)) {
-            return back()->withErrors(['hapus' => 'Anda tidak dapat menghapus akun Anda sendiri.']);
-        }
         if ($user->status_aktif && $this->jumlahAdminAktif() <= 1) {
             return back()->withErrors(['hapus' => 'Minimal satu akun administrator harus tetap aktif.']);
         }
