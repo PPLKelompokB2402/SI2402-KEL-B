@@ -9,6 +9,13 @@ use App\Models\User;
  */
 class Us00PerintahAkunTest extends KolaboraTestCase
 {
+    /** Migrasi seed_administrator_accounts sudah membuat akun bawaan; perintah artisan diuji pada database tanpa akun admin. */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        User::whereIn('role', [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN])->delete();
+    }
+
     public function test_command_membuat_super_admin_pertama(): void
     {
         $this->artisan('admin:create-super-admin', ['nama' => 'Boot Admin', 'email' => 'boot@example.test'])
