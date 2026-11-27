@@ -20,11 +20,19 @@ class Us08StatusVerifikasiTest extends KolaboraTestCase
         $nib = $vendor->dokumenLegalitas()->create(['jenis_dokumen' => 'NIB', 'no_dokumen' => '2', 'media_url' => 'legalitas/b.pdf', 'status_verifikasi' => 'ditolak', 'catatan_admin' => 'Buram']);
         $this->sebagaiAdmin($admin)->patch(route('admin.vendors.status', $vendor), ['status_verifikasi' => 'terverifikasi'])->assertSessionHasErrors('status_verifikasi');
 
+        // Dokumen lengkap tetapi belum ditandai Valid: masih ditolak dan vendor tetap di antrean.
         $nib->update(['status_verifikasi' => 'menunggu', 'catatan_admin' => null]);
+        $this->sebagaiAdmin($admin)->patch(route('admin.vendors.status', $vendor), ['status_verifikasi' => 'terverifikasi'])
+            ->assertSessionHasErrors(['status_verifikasi' => 'Dokumen KTP dan NIB/SIUP belum ditandai Valid. Periksa dokumen di halaman detail vendor terlebih dahulu.']);
+        $this->assertSame(Vendor::MENUNGGU, $vendor->fresh()->status_verifikasi);
+
+        // Setelah KTP dan NIB ditandai Valid, vendor dapat diverifikasi.
+        foreach ([$ktp, $nib] as $dokumen) {
+            $this->sebagaiAdmin($admin)->patch(route('admin.dokumen.periksa', $dokumen), ['status_verifikasi' => 'valid']);
+        }
         $this->sebagaiAdmin($admin)->patch(route('admin.vendors.status', $vendor), ['status_verifikasi' => 'terverifikasi'])
             ->assertRedirect(route('admin.verifikasi'));
         $this->assertSame(Vendor::TERVERIFIKASI, $vendor->fresh()->status_verifikasi);
-        $this->assertSame('valid', $ktp->fresh()->status_verifikasi);
         $this->assertSame($admin->id_user, $nib->fresh()->id_admin);
 
         // Vendor yang terverifikasi langsung tampil di katalog.

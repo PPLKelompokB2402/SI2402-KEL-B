@@ -99,7 +99,7 @@ class AdminVendorVerificationTest extends TestCase
             'status_verifikasi' => Vendor::TERVERIFIKASI,
         ]);
 
-        $response = $this->actingAs($this->admin, 'web')
+        $response = $this->actingAs($this->admin, 'admin')
             ->get(route('admin.verifikasi'));
 
         $response->assertOk();
@@ -113,9 +113,9 @@ class AdminVendorVerificationTest extends TestCase
         $this->buatDokumen($this->vendorMenunggu, 'KTP');
         $this->buatDokumen($this->vendorMenunggu, 'NIB');
 
-        $this->actingAs($this->admin, 'web')
+        $this->actingAs($this->admin, 'admin')
             ->get(route('admin.verifikasi'))
-            ->assertSee('Dokumen lengkap');
+            ->assertSee('Dokumen belum divalidasi'); // KTP + NIB sudah diunggah, menunggu diperiksa
     }
 
     // ─── TC-02 ───────────────────────────────────────────────────────────────
@@ -139,7 +139,7 @@ class AdminVendorVerificationTest extends TestCase
         $this->buatDokumen($this->vendorMenunggu, 'KTP');
         $this->buatDokumen($this->vendorMenunggu, 'NIB');
 
-        $response = $this->actingAs($this->admin, 'web')
+        $response = $this->actingAs($this->admin, 'admin')
             ->get(route('admin.verifikasi.detail', $this->vendorMenunggu));
 
         $response->assertOk();
@@ -163,7 +163,7 @@ class AdminVendorVerificationTest extends TestCase
     {
         $dokumen = $this->buatDokumen($this->vendorMenunggu, 'KTP');
 
-        $this->actingAs($this->admin, 'web')
+        $this->actingAs($this->admin, 'admin')
             ->patch(route('admin.dokumen.periksa', $dokumen), [
                 'status_verifikasi' => DokumenLegalitas::VALID,
             ])
@@ -188,7 +188,7 @@ class AdminVendorVerificationTest extends TestCase
     {
         $dokumen = $this->buatDokumen($this->vendorMenunggu, 'NIB');
 
-        $this->actingAs($this->admin, 'web')
+        $this->actingAs($this->admin, 'admin')
             ->patch(route('admin.dokumen.periksa', $dokumen), [
                 'status_verifikasi' => DokumenLegalitas::DITOLAK,
                 'catatan_admin'     => 'Nomor NIB tidak terbaca.',
@@ -215,7 +215,7 @@ class AdminVendorVerificationTest extends TestCase
     {
         $dokumen = $this->buatDokumen($this->vendorMenunggu, 'SIUP');
 
-        $this->actingAs($this->admin, 'web')
+        $this->actingAs($this->admin, 'admin')
             ->patch(route('admin.dokumen.periksa', $dokumen), [
                 'status_verifikasi' => DokumenLegalitas::DITOLAK,
                 // catatan_admin sengaja dikosongkan
@@ -242,7 +242,7 @@ class AdminVendorVerificationTest extends TestCase
         $dokumen = $this->buatDokumen($this->vendorMenunggu, 'NIB');
         $catatan = 'Scan tidak jelas, NIB harus tampak seluruh halamannya.';
 
-        $this->actingAs($this->admin, 'web')
+        $this->actingAs($this->admin, 'admin')
             ->patch(route('admin.dokumen.periksa', $dokumen), [
                 'status_verifikasi' => DokumenLegalitas::DITOLAK,
                 'catatan_admin'     => $catatan,
@@ -269,7 +269,7 @@ class AdminVendorVerificationTest extends TestCase
 
         $this->assertNull($dokumen->id_admin, 'Sebelum pemeriksaan id_admin harus null.');
 
-        $this->actingAs($this->admin, 'web')
+        $this->actingAs($this->admin, 'admin')
             ->patch(route('admin.dokumen.periksa', $dokumen), [
                 'status_verifikasi' => DokumenLegalitas::VALID,
             ]);
@@ -305,7 +305,7 @@ class AdminVendorVerificationTest extends TestCase
         $dokumen = $this->buatDokumen($this->vendorMenunggu, 'KTP');
         $catatan = 'Foto KTP terlalu gelap, harap perjelas.';
 
-        $this->actingAs($this->admin, 'web')
+        $this->actingAs($this->admin, 'admin')
             ->patch(route('admin.dokumen.periksa', $dokumen), [
                 'status_verifikasi' => DokumenLegalitas::DITOLAK,
                 'catatan_admin'     => $catatan,
