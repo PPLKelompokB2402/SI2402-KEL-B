@@ -9,7 +9,6 @@
         </div>
         <div class="admin-shortcuts">
             <a href="{{ route('super-admin.kategori') }}"><span><x-icon name="briefcase" /></span><strong>Kategori layanan</strong><small>Kelola kategori katalog</small></a>
-            <a href="{{ route('super-admin.administrator') }}"><span><x-icon name="users" /></span><strong>Administrator</strong><small>Kelola akun administrator</small></a>
         </div>
     </section>
 @endsection

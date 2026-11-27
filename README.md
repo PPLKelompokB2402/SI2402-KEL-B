@@ -1,33 +1,43 @@
-# KolaboraEO — Tahap 11b: US-11 bagian 2: Halaman membuat akun administrator
+# KolaboraEO — Tahap 10: PBI-10 Portal login admin terpisah
 
-Tampilan daftar administrator dan form pembuatan akun.
+Login admin dan super admin dipisah dari login pelanggan/vendor.
 
 ## Yang ditambahkan pada tahap ini
 
-- Menu **Administrator** di portal super admin (`/super-admin/administrator`) dan pintasan di Ringkasan super admin.
-- Daftar akun administrator beserta status Aktif/Nonaktif dan jumlah admin aktif.
-- Tombol **＋ Buat akun administrator** membuka form nama, email, kata sandi awal, ulangi kata sandi; bila ada kesalahan form tetap terbuka dengan isian lama.
+- URL `/admin/login` dan `/super-admin/login` dengan guard sesi terpisah (`admin`, `super_admin`).
+- `/login` kini hanya untuk pelanggan & vendor; peran tidak bisa masuk lewat portal yang salah.
 
-## File yang berubah dari tahap 11a
+## File yang berubah dari tahap 09
 
-- **baru** `resources/views/super-admin/administrator.blade.php`
-- **baru** `tests/Feature/Us11bMembuatAdministratorTest.php`
-- diubah `app/Http/Controllers/AdministratorController.php`
-- diubah `public/css/app.css`
+- **baru** `resources/views/auth/admin-login.blade.php`
+- **baru** `resources/views/auth/super-admin-login.blade.php`
+- **baru** `tests/Feature/Us10PortalAdminTest.php`
+- diubah `app/Http/Controllers/AuthController.php`
+- diubah `app/Http/Controllers/MediaController.php`
+- diubah `bootstrap/app.php`
+- diubah `config/auth.php`
+- diubah `resources/views/auth/login.blade.php`
+- diubah `resources/views/layouts/admin.blade.php`
 - diubah `resources/views/layouts/super-admin.blade.php`
-- diubah `resources/views/super-admin/dashboard.blade.php`
 - diubah `routes/web.php`
+- diubah `tests/Feature/KolaboraTestCase.php`
+- diubah `tests/Feature/Us00AutentikasiTest.php`
+- diubah `tests/Feature/Us00PerintahAkunTest.php`
+- diubah `tests/Feature/Us07TinjauDokumenTest.php`
 
 ## Menjalankan
 
-Melanjutkan database yang sudah dipakai di tahap sebelumnya (XAMPP/MySQL):
-
 ```bash
 composer install
-php artisan migrate        # tidak ada migrasi baru di tahap ini
+cp .env.example .env            # PowerShell: Copy-Item .env.example .env
+php artisan key:generate
+touch database/database.sqlite  # PowerShell: New-Item -ItemType File database/database.sqlite
+php artisan migrate:fresh --seed
 php artisan serve
 
-php artisan test           # pengujian otomatis
+php artisan test                 # pengujian tahap ini
 ```
 
-Database baru dari nol: `php artisan migrate:fresh --seed`. Akun bawaan (kata sandi `12345678`): super admin `superadmin@kolabora.test` (login di `/super-admin/login`) dan admin `admin@kolabora.test` (login di `/admin/login`).
+Isi `SUPER_ADMIN_NAME`, `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD` di `.env` sebelum seeding untuk membuat akun Super Admin pertama.
+
+Akun administrator pada tahap ini dibuat dengan `php artisan admin:create-admin "Nama Admin" admin@contoh.com`.

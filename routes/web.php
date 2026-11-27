@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\KategoriController;
@@ -70,17 +69,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', 'role:admin'])
 });
 
 /*
-| Portal super admin — US-11 kelola akun administrator (+ kategori)
+| Portal super admin — PBI-11, 12 (+ kategori & audit log)
 */
 Route::prefix('super-admin')->name('super-admin.')->middleware(['auth:super_admin', 'role:super_admin'])->group(function () {
     Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori');
     Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
     Route::patch('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
-    // US-11 — kelola akun administrator
-    Route::get('/administrator', [AdministratorController::class, 'index'])->name('administrator');
-    Route::post('/administrator', [AdministratorController::class, 'store'])->name('administrator.store');
-    Route::put('/administrator/{user}', [AdministratorController::class, 'update'])->name('administrator.update');
-    Route::patch('/administrator/{user}/status', [AdministratorController::class, 'ubahStatus'])->name('administrator.status');
-    Route::delete('/administrator/{user}', [AdministratorController::class, 'destroy'])->name('administrator.destroy');
 });
