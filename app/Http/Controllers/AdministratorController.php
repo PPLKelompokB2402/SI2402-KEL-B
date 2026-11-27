@@ -15,6 +15,18 @@ use Illuminate\View\View;
  */
 class AdministratorController extends Controller
 {
+    /** Daftar administrator beserta form pembuatan akun. */
+    public function index(): View
+    {
+        return view('super-admin.administrator', [
+            'admins' => User::where('role', User::ROLE_ADMIN)
+                ->orderByDesc('status_aktif')
+                ->orderBy('nama')
+                ->get(),
+            'jumlahAktif' => $this->jumlahAdminAktif(),
+        ]);
+    }
+
     /** AC-01: membuat akun administrator baru yang langsung aktif. */
     public function store(Request $request): RedirectResponse
     {

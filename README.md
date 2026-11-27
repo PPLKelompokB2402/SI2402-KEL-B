@@ -1,24 +1,21 @@
-# KolaboraEO — Tahap 11a: US-11 bagian 1: Backend kelola akun administrator
+# KolaboraEO — Tahap 11b: US-11 bagian 2: Halaman membuat akun administrator
 
-Logika server agar **super admin** dapat membuat, mengedit, menonaktifkan/mengaktifkan, dan menghapus akun administrator. Belum ada halaman; diuji lewat tes otomatis.
+Tampilan daftar administrator dan form pembuatan akun.
 
 ## Yang ditambahkan pada tahap ini
 
-- `AdministratorController` + route di grup portal super admin (`auth:super_admin`, `role:super_admin`); admin biasa, vendor, pelanggan, dan tamu tidak punya akses:
-  - `POST /super-admin/administrator` — membuat akun admin (nama, email unik, kata sandi min. 8 + konfirmasi); akun langsung aktif (AC-01).
-  - `PUT /super-admin/administrator/{user}` — mengedit nama, email, dan kata sandi (opsional; kosong = tidak diganti).
-  - `PATCH /super-admin/administrator/{user}/status` — menonaktifkan/mengaktifkan kembali admin (AC-02).
-  - `DELETE /super-admin/administrator/{user}` — menghapus akun admin.
-- AC-05: admin aktif terakhir tidak bisa dinonaktifkan atau dihapus.
-- AC-03/AC-04: semua admin aktif punya akses setara di portal admin; admin nonaktif tidak bisa login dan sesinya ditolak, admin lain tetap bisa mengerjakan antrean verifikasi.
-- AC-06: registrasi publik tetap hanya menerima peran pelanggan/vendor.
-- Tidak ada tabel baru (memakai `users` dan `administrator`).
+- Menu **Administrator** di portal super admin (`/super-admin/administrator`) dan pintasan di Ringkasan super admin.
+- Daftar akun administrator beserta status Aktif/Nonaktif dan jumlah admin aktif.
+- Tombol **＋ Buat akun administrator** membuka form nama, email, kata sandi awal, ulangi kata sandi; bila ada kesalahan form tetap terbuka dengan isian lama.
 
-## File yang berubah dari tahap 10
+## File yang berubah dari tahap 11a
 
-- **baru** `app/Http/Controllers/AdministratorController.php`
-- **baru** `tests/Feature/Us11aKelolaAdministratorBackendTest.php`
-- diubah `app/Http/Controllers/SuperAdminController.php`
+- **baru** `resources/views/super-admin/administrator.blade.php`
+- **baru** `tests/Feature/Us11bMembuatAdministratorTest.php`
+- diubah `app/Http/Controllers/AdministratorController.php`
+- diubah `public/css/app.css`
+- diubah `resources/views/layouts/super-admin.blade.php`
+- diubah `resources/views/super-admin/dashboard.blade.php`
 - diubah `routes/web.php`
 
 ## Menjalankan

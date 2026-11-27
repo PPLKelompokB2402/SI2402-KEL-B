@@ -78,6 +78,7 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth:super_admi
     Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
     Route::patch('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
     // US-11 — kelola akun administrator
+    Route::get('/administrator', [AdministratorController::class, 'index'])->name('administrator');
     Route::post('/administrator', [AdministratorController::class, 'store'])->name('administrator.store');
     Route::put('/administrator/{user}', [AdministratorController::class, 'update'])->name('administrator.update');
     Route::patch('/administrator/{user}/status', [AdministratorController::class, 'ubahStatus'])->name('administrator.status');

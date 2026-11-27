@@ -15,6 +15,7 @@
         'items' => [
             ['name' => 'super-admin.dashboard', 'label' => 'Ringkasan', 'icon' => 'grid'],
             ['name' => 'super-admin.kategori', 'label' => 'Kategori', 'icon' => 'briefcase'],
+            ['name' => 'super-admin.administrator', 'match' => 'super-admin.administrator*', 'label' => 'Administrator', 'icon' => 'users'],
         ],
     ])
 </body>
