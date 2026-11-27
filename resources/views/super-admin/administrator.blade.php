@@ -25,6 +25,13 @@
                         <div class="admin-account-name"><strong>{{ $admin->nama }}</strong><small>{{ $admin->email }}</small></div>
                         <span class="status-tag {{ $admin->status_aktif ? 'terverifikasi' : 'ditolak' }}">{{ $admin->status_aktif ? 'Aktif' : 'Nonaktif' }}</span>
                         <a class="button button-outline" href="{{ route('super-admin.administrator.edit', $admin) }}">Edit</a>
+                        <form method="POST" action="{{ route('super-admin.administrator.status', $admin) }}" @if($admin->status_aktif) onsubmit="return confirm('Nonaktifkan akun administrator {{ $admin->nama }}?')" @endif>@csrf @method('PATCH')
+                            <input type="hidden" name="status_aktif" value="{{ $admin->status_aktif ? 0 : 1 }}">
+                            <button class="button {{ $admin->status_aktif ? 'button-danger' : 'button-outline' }}" type="submit">{{ $admin->status_aktif ? 'Nonaktifkan' : 'Aktifkan' }}</button>
+                        </form>
+                        <form method="POST" action="{{ route('super-admin.administrator.destroy', $admin) }}" onsubmit="return confirm('Hapus permanen akun administrator {{ $admin->nama }}? Tindakan ini tidak dapat dibatalkan.')">@csrf @method('DELETE')
+                            <button class="button button-danger-solid" type="submit">Hapus</button>
+                        </form>
                     </article>
                 @empty
                     <div class="empty-cell">Belum ada akun administrator.</div>

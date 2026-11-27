@@ -1,21 +1,17 @@
-# KolaboraEO — Tahap 11c: US-11 bagian 3: Halaman mengedit akun administrator
+# KolaboraEO — Tahap 11d: US-11 bagian 4: Menonaktifkan dan menghapus akun administrator
 
-Tampilan untuk mengedit akun administrator.
+Tombol untuk menonaktifkan/mengaktifkan kembali dan menghapus akun administrator.
 
 ## Yang ditambahkan pada tahap ini
 
-- Tombol **Edit** pada setiap baris daftar administrator.
-- Halaman `/super-admin/administrator/{id}/edit`: ubah nama, email, dan kata sandi baru (kosongkan bila tidak diganti).
-- Setelah disimpan kembali ke daftar dengan pesan berhasil; bila ada kesalahan kembali ke form edit.
+- Tombol **Nonaktifkan / Aktifkan** dan **Hapus** (dengan konfirmasi) untuk setiap akun admin.
+- Pesan kesalahan tampil bila super admin mencoba menonaktifkan/menghapus admin aktif terakhir.
+- AC-07: pencatatan ke audit log ditambahkan pada tahap 16 (US-16).
 
-## File yang berubah dari tahap 11b
+## File yang berubah dari tahap 11c
 
-- **baru** `resources/views/super-admin/administrator-edit.blade.php`
-- **baru** `tests/Feature/Us11cMengeditAdministratorTest.php`
-- diubah `app/Http/Controllers/AdministratorController.php`
-- diubah `public/css/app.css`
+- **baru** `tests/Feature/Us11dNonaktifHapusAdministratorTest.php`
 - diubah `resources/views/super-admin/administrator.blade.php`
-- diubah `routes/web.php`
 
 ## Menjalankan
 
