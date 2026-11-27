@@ -909,3 +909,11 @@ button { cursor: pointer; }
 }
 .vendor-overview-stats article > strong { justify-self: start; }
 .availability-toggle-form + .availability-toggle-form { margin-top: 10px; }
+
+/* US-11 — kelola administrator */
+.admin-form-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+.admin-form-actions .category-add-details[open] { flex-basis: 100%; }
+.admin-account-row form { margin: 0; }
+.button-danger-solid { border: 1px solid #a14c47; color: #fff; background: #a14c47; }
+.button-danger-solid:hover { border-color: #873c38; background: #873c38; }
+@media (max-width: 640px) { .admin-account-row { flex-wrap: wrap; } .admin-account-name { flex-basis: calc(100% - 60px); } }
