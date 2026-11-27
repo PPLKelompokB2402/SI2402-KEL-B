@@ -20,7 +20,7 @@ class Us07TinjauDokumenTest extends KolaboraTestCase
 
         $vendor->dokumenLegalitas()->create(['jenis_dokumen' => 'KTP', 'no_dokumen' => '1', 'media_url' => 'legalitas/a.pdf']);
         $nib = $vendor->dokumenLegalitas()->create(['jenis_dokumen' => 'NIB', 'no_dokumen' => '2', 'media_url' => 'legalitas/b.pdf']);
-        $this->sebagaiAdmin($admin)->get('/admin/verifikasi')->assertSee('Dokumen belum divalidasi'); // KTP + NIB sudah diunggah, menunggu diperiksa
+        $this->sebagaiAdmin($admin)->get('/admin/verifikasi')->assertSee('Dokumen lengkap');
         $this->sebagaiAdmin($admin)->get(route('admin.verifikasi.detail', $vendor))->assertOk()->assertSee('Buka berkas');
 
         // Penolakan dokumen wajib disertai catatan yang tampil bagi vendor.
