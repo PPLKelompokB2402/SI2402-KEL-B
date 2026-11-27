@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\KategoriController;
@@ -67,11 +66,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', 'role:admin'])
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori');
     Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
     Route::patch('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
-    // US-11 — kelola akun administrator
-    Route::post('/administrator', [AdministratorController::class, 'store'])->name('administrator.store');
-    Route::put('/administrator/{user}', [AdministratorController::class, 'update'])->name('administrator.update');
-    Route::patch('/administrator/{user}/status', [AdministratorController::class, 'ubahStatus'])->name('administrator.status');
-    Route::delete('/administrator/{user}', [AdministratorController::class, 'destroy'])->name('administrator.destroy');
 });
 
 /*
